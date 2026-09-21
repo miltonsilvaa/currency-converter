@@ -14,9 +14,29 @@
 
   const DEFAULT_FROM = "USD";
   const DEFAULT_TO = "BRL";
-  const history = [];
+  const HISTORY_KEY = "converteja-history";
   let debounceTimer = null;
   let requestId = 0;
+
+  function loadHistory() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
+      if (!Array.isArray(saved)) return [];
+      return saved.map((item) => ({ ...item, time: new Date(item.time) }));
+    } catch {
+      return [];
+    }
+  }
+
+  function persistHistory() {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch {
+      // localStorage indisponível (modo privado, quota excedida) - segue sem persistir
+    }
+  }
+
+  const history = loadHistory();
 
   function formatNumber(value, currency) {
     try {
@@ -69,13 +89,13 @@
 
       fromSelect.value = DEFAULT_FROM;
       toSelect.value = DEFAULT_TO;
-      convert();
+      convert(false);
     } catch (err) {
       showError("Não foi possível carregar a lista de moedas. Verifique sua conexão e recarregue a página.");
     }
   }
 
-  async function convert() {
+  async function convert(recordHistory = true) {
     const amount = parseFloat(amountInput.value);
     const from = fromSelect.value;
     const to = toSelect.value;
@@ -102,7 +122,7 @@
       if (currentRequest !== requestId) return;
 
       showResult({ amount, from, to, rate, converted });
-      addToHistory({ amount, from, to, converted });
+      if (recordHistory) addToHistory({ amount, from, to, converted });
     } catch (err) {
       if (currentRequest !== requestId) return;
       showError("Não foi possível obter a cotação agora. Tente novamente em instantes.");
@@ -112,6 +132,7 @@
   function addToHistory(entry) {
     history.unshift({ ...entry, time: new Date() });
     if (history.length > 5) history.pop();
+    persistHistory();
     renderHistory();
   }
 
@@ -150,5 +171,6 @@
     convert();
   });
 
+  renderHistory();
   loadCurrencies();
 })();
