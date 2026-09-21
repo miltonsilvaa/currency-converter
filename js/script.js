@@ -11,6 +11,7 @@
   const rateInfo = document.getElementById("rateInfo");
   const historyList = document.getElementById("historyList");
   const historyEmpty = document.getElementById("historyEmpty");
+  const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 
   const DEFAULT_FROM = "USD";
   const DEFAULT_TO = "BRL";
@@ -137,6 +138,8 @@
   }
 
   function renderHistory() {
+    clearHistoryBtn.hidden = history.length === 0;
+
     if (history.length === 0) {
       historyList.innerHTML = "";
       historyList.appendChild(historyEmpty);
@@ -161,6 +164,12 @@
   amountInput.addEventListener("input", debounceConvert);
   fromSelect.addEventListener("change", convert);
   toSelect.addEventListener("change", convert);
+
+  clearHistoryBtn.addEventListener("click", () => {
+    history.splice(0, history.length);
+    persistHistory();
+    renderHistory();
+  });
 
   swapBtn.addEventListener("click", () => {
     swapBtn.classList.add("is-spinning");

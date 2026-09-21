@@ -69,7 +69,10 @@
   </section>
 
   <section class="history card" aria-labelledby="historyTitle">
-    <h2 id="historyTitle">Últimas conversões</h2>
+    <div class="history__head">
+      <h2 id="historyTitle">Últimas conversões</h2>
+      <button type="button" class="history__clear" id="clearHistoryBtn" hidden>Limpar histórico</button>
+    </div>
     <ul class="history__list" id="historyList">
       <li class="history__empty" id="historyEmpty">Suas conversões aparecerão aqui.</li>
     </ul>

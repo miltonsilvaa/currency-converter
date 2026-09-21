@@ -141,7 +141,22 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.history h2 { font-family: var(--font-heading); font-size: 1.15rem; margin: 0 0 1rem; text-align: center; }
+.history__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.history h2 { font-family: var(--font-heading); font-size: 1.15rem; margin: 0; }
+.history__clear {
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.history__clear:hover { color: var(--error); background: rgba(220, 38, 38, 0.08); }
 .history__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
 .history__empty { color: var(--text-muted); font-size: 0.9rem; }
 .history__item {
